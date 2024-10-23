@@ -1,22 +1,31 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { KeyboardControls } from "@react-three/drei";
 import { Game } from "./components/canvas/scene";
+import { Physics } from "@react-three/rapier";
+
+export const Controls = {
+  jump: "jump",
+};
 
 function App() {
-  const [count, setCount] = useState(0);
+  const map = useMemo(() => [{ name: Controls.jump, keys: ["Space"] }], []);
 
   return (
     <div className="relative z-0 bg-white w-screen h-screen overscroll-none overflow-y-hidden scrollbar-thin -ms-overflow-y-hidden">
-      <Canvas
-        dpr={[1, 2]}
-        shadows
-        camera={{ position: [0, 2, 10], fov: 50, near: 1, far: 100 }}
-      >
-        <color attach="background" args={["#101010"]} />
-        <ambientLight intensity={1} />
-        <Game />
-      </Canvas>
+      <KeyboardControls map={map}>
+        <Canvas
+          dpr={[1, 2]}
+          shadows
+          camera={{ position: [0, 2, 10], fov: 50, near: 1, far: 100 }}
+        >
+          <color attach="background" args={["#ebebeb"]} />
+          <Physics gravity={[0, -9.81, 0]} debug>
+            <ambientLight intensity={1} />
+            <Game />
+          </Physics>
+        </Canvas>
+      </KeyboardControls>
     </div>
   );
 }

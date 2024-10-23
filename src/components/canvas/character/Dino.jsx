@@ -6,14 +6,34 @@ Source: https://sketchfab.com/3d-models/3d-chrome-dino-walking-fb6f49c248494011b
 Title: 3D Chrome Dino Walking
 */
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
+import { RigidBody } from '@react-three/rapier'
 
 export function Dino(props) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('/dino.glb')
   const { actions } = useAnimations(animations, group)
+  
+  // useEffect(() => {
+  //   actions["Walking"].play( 10 );
+  //   return () => actions["Walking"].fadeOut(0.5);
+  // }, []);
+  
   return (
+    <RigidBody
+
+      position={[0, 1, 0]} // Starting position of the Dino
+      // onCollisionEnter={(event) => {
+      //   // Handle collision logic here (if needed)
+      // }}
+      // onClick={() => {
+      //   // Handle jump when clicking on Dino
+      //   const impulse = { x: 0, y: 5, z: 0 }; // Adjust the impulse value as needed
+      //   actions["Walking"].play(); // Play animation when jumping
+      //   props.api.applyImpulse(impulse);
+      // }}
+    >
     <group ref={group} {...props} dispose={null}>
       <group name="Sketchfab_Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
@@ -66,6 +86,7 @@ export function Dino(props) {
         </group>
       </group>
     </group>
+    </RigidBody>
   )
 }
 

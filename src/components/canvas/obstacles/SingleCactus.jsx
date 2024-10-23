@@ -8,6 +8,7 @@ Title: Voxel Cactus 1x2
 
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { RigidBody } from '@react-three/rapier';
 
 export function SingleCactus(props) {
   const { nodes, materials } = useGLTF('/cactusx1.glb')
