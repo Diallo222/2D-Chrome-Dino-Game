@@ -6,16 +6,14 @@ import { Dino } from "../character";
 import { Controls } from "../../../App";
 import { useFrame } from "@react-three/fiber";
 import Obstacles from "./Obstacles";
+import { useGameStore } from "../../../store/hooks";
 
 const Game = () => {
-  const [started, setStarted] = useState(false);
+  const { start } = useGameStore();
+  const toggleGame = useGameStore((state) => state.setStart);
   const dino = useRef();
-  const isOnFloor = useRef();
+  const isOnFloor = useRef(true); // Initialize with true assuming Dino starts on the ground
   const jumpRequested = useRef(false); // Track jump request
-
-  const toggleGame = () => {
-    setStarted(!started);
-  };
 
   const jump = () => {
     if (isOnFloor.current) {
@@ -28,7 +26,7 @@ const Game = () => {
   useFrame(() => {
     // Check if the jump key was just pressed
     if (jumpPressed && !jumpRequested.current) {
-      jump(); 
+      jump();
       jumpRequested.current = true;
     }
 
@@ -39,14 +37,20 @@ const Game = () => {
 
   return (
     <>
-      {/* <Dino /> */}
-
+     
+    
       <RigidBody
         position={[0, 4, 0]}
         ref={dino}
+        // type="fixed"
+        colliders="cuboid"
+        includeInvisible
         onCollisionEnter={({ other }) => {
           if (other.rigidBodyObject.name === "floor") {
             isOnFloor.current = true;
+          }
+          if (other.rigidBodyObject.name === "obstacle") {
+            toggleGame();
           }
         }}
         onCollisionExit={({ other }) => {
@@ -55,11 +59,9 @@ const Game = () => {
           }
         }}
       >
-        <Box onClick={toggleGame}>
-          <meshStandardMaterial color="red" />
-        </Box>
+        <Dino />
       </RigidBody>
-      {started && <Obstacles />}
+      {start && <Obstacles />}
       <Ground name="floor" />
     </>
   );

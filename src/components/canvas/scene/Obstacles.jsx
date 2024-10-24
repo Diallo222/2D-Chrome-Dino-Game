@@ -4,7 +4,7 @@ import { RigidBody } from "@react-three/rapier";
 import { SingleCactus } from "../obstacles";
 import { Box } from "@react-three/drei";
 
-const Obstacles = () => {
+const Obstacles = ({ ...props }) => {
   const [obstacles, setObstacles] = useState([]);
 
   // Move obstacles and remove them once they go off-screen
@@ -40,13 +40,14 @@ const Obstacles = () => {
     <>
       {obstacles.map((obstacle) => (
         <RigidBody
+          {...props}
           key={obstacle.key}
+          name="obstacle"
+          colliders="hull"
           type="fixed"
           position={obstacle.position}
         >
-            <Box >
-          <meshStandardMaterial color="red" />
-        </Box>
+          <SingleCactus />
           
         </RigidBody>
       ))}
